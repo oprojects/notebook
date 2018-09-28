@@ -15,6 +15,7 @@ ENV LC_ALL en_US.UTF-8
 ENV PYTHONIOENCODING UTF-8
 
 # Install developer tools
+# Install Latex packages (missing in SLC6, needed to convert notebooks to PDF)
 RUN yum -y update && \
     yum -y install \
         bzip2 \
@@ -38,19 +39,10 @@ RUN yum -y update && \
         wget \
         which \
         zeromq3-devel \
-        zlib-devel && \
+        zlib-devel \
+        texlive-xetex && \
     yum clean all && \
     rm -rf /var/cache/yum
-
-# Install Latex packages (missing in SLC6, needed to convert notebooks to PDF)
-WORKDIR /usr/share/texmf
-RUN wget http://mirrors.ctan.org/install/macros/latex/contrib/adjustbox.tds.zip && \
-    unzip -d . adjustbox.tds.zip && \ 
-    rm adjustbox.tds.zip && \
-    wget http://mirrors.ctan.org/install/macros/latex/contrib/collectbox.tds.zip && \
-    unzip -d . collectbox.tds.zip && \
-    rm collectbox.tds.zip && \
-    mktexlsr
 
 # Install Tini
 RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.10.0/tini && \
